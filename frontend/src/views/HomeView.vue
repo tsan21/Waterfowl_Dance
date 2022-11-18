@@ -7,10 +7,10 @@
 
       <v-col>
         <weapon-categories></weapon-categories>
-        <br>
-        <calculator-content></calculator-content>
+        <calculator-content class="top-gap"></calculator-content>
       </v-col>
     </v-row>
+    <br />
   </v-container>
 </template>
 
@@ -18,7 +18,6 @@
 import StatsOverview from "@/components/StatsOverview.vue";
 import CalculatorContent from "@/components/CalculatorContent.vue";
 import WeaponCategories from "@/components/WeaponCategories.vue";
-
 
 export default {
   name: "HomeView",
@@ -36,3 +35,9 @@ export default {
   methods: {},
 };
 </script>
+
+<style>
+.top-gap{
+  margin-top: 10px;
+}
+</style>

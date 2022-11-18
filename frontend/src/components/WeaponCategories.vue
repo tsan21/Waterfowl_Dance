@@ -1,48 +1,16 @@
 <template>
-  <v-sheet min-height="20vh" rounded="lg" elevation="3">
+  <v-sheet rounded="lg" elevation="3">
     <v-card flat>
-      <v-card-text>
+      <v-card-text class="pa-0">
         <v-container fluid>
-          <v-row>
-            <v-col cols="12" sm="4" md="4">
+          <v-row dense no-gutters>
+            <v-col v-for="cat in categories" :key="cat" cols="6" sm="3" md="2">
               <v-checkbox
-                label="red"
-                color="red"
-                value="red"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                label="red darken-3"
-                color="red darken-3"
-                value="red darken-3"
-                hide-details
-              ></v-checkbox>
-            </v-col>
-            <v-col cols="12" sm="4" md="4">
-              <v-checkbox
-                label="indigo"
-                color="indigo"
-                value="indigo"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                label="indigo darken-3"
-                color="indigo darken-3"
-                value="indigo darken-3"
-                hide-details
-              ></v-checkbox>
-            </v-col>
-            <v-col cols="12" sm="4" md="4">
-              <v-checkbox
-                label="orange"
-                color="orange"
-                value="orange"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                label="orange darken-3"
-                color="orange darken-3"
-                value="orange darken-3"
+                dense
+                :label="cat"
+                v-model="selected"
+                :value="cat"
+                color="primary"
                 hide-details
               ></v-checkbox>
             </v-col>
@@ -62,38 +30,39 @@ export default {
   mounted() {},
 
   data: () => ({
+    selected: [],
     categories: [
-      "Axe",
-      "Ballista",
-      "Bow",
-      "Claw",
-      "Colossal Sword",
-      "Colossal Weapon",
-      "Crossbow",
-      "Curved Greatsword",
-      "Curved Sword",
-      "Dagger",
-      "Fist",
-      "Flail",
-      "Glintstone Staff",
-      "Greataxe",
-      "Greatbow",
-      "Great Spear",
-      "Greatsword",
-      "Halberd",
-      "Hammer",
-      "Heavy Thrusting Sword",
-      "Katana",
-      "Light Bow",
-      "Reaper",
-      "Sacred Seal",
-      "Spear",
-      "Straight Sword",
-      "Thrusting Sword",
-      "Torch",
-      "Twinblade",
-      "Warhammer",
-      "Whip",
+      "Axes",
+      "Ballistae",
+      "Bows",
+      "Claws",
+      "Colossal Swords",
+      "Colossal Weapons",
+      "Crossbows",
+      "Curved Greatswords",
+      "Curved Swords",
+      "Daggers",
+      "Fists",
+      "Flails",
+      "Glintstone Staffs",
+      "Greataxes",
+      "Greatbows",
+      "Great Spears",
+      "Greatswords",
+      "Halberds",
+      "Hammers",
+      "Heavy Thrusting Swords",
+      "Katanas",
+      "Light Bows",
+      "Reapers",
+      "Sacred Seals",
+      "Spears",
+      "Straight Swords",
+      "Thrusting Swords",
+      "Torchs",
+      "Twinblades",
+      "Warhammers",
+      "Whips",
     ],
   }),
 
