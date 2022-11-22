@@ -6,8 +6,14 @@
       </v-col>
 
       <v-col>
-        <weapon-categories></weapon-categories>
-        <calculator-content class="top-gap"></calculator-content>
+        <weapon-categories
+          @setSelectedWeaponCategories="setSelectedWeaponCategories"
+        ></weapon-categories>
+
+        <calculator-content
+          :selectedWeaponCategories="selectedWeaponCategories"
+          class="top-gap"
+        ></calculator-content>
       </v-col>
     </v-row>
     <br />
@@ -30,14 +36,20 @@ export default {
 
   mounted() {},
 
-  data: () => ({}),
+  data: () => ({
+    selectedWeaponCategories: [],
+  }),
 
-  methods: {},
+  methods: {
+    setSelectedWeaponCategories(val) {
+      this.selectedWeaponCategories = val;
+    },
+  },
 };
 </script>
 
 <style>
-.top-gap{
+.top-gap {
   margin-top: 10px;
 }
 </style>

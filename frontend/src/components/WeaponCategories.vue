@@ -7,7 +7,7 @@
             <v-col v-for="cat in categories" :key="cat" cols="6" sm="3" md="2">
               <v-checkbox
                 dense
-                :label="cat"
+                :label="getPlural(cat)"
                 v-model="selected"
                 :value="cat"
                 color="primary"
@@ -27,45 +27,84 @@ export default {
 
   components: {},
 
-  mounted() {},
+  mounted() {
+    // let a = require("@/assets/TarnishedSpreadsheet/Raw_Data.json");
+    // let cats = [];
+    // for (let b of a.filter(
+    //   (val1, index, arr) =>
+    //     arr.findIndex((val2) => val2["Weapon Type"] === val1["Weapon Type"]) ===
+    //     index
+    // )) {
+    //   cats.push(b["Weapon Type"]);
+    // }
+    // console.log(cats);
+  },
 
   data: () => ({
     selected: [],
     categories: [
-      "Axes",
-      "Ballistae",
-      "Bows",
-      "Claws",
-      "Colossal Swords",
-      "Colossal Weapons",
-      "Crossbows",
-      "Curved Greatswords",
-      "Curved Swords",
-      "Daggers",
-      "Fists",
-      "Flails",
-      "Glintstone Staffs",
-      "Greataxes",
-      "Greatbows",
-      "Great Spears",
-      "Greatswords",
-      "Halberds",
-      "Hammers",
-      "Heavy Thrusting Swords",
-      "Katanas",
-      "Light Bows",
-      "Reapers",
-      "Sacred Seals",
-      "Spears",
-      "Straight Swords",
-      "Thrusting Swords",
-      "Torchs",
-      "Twinblades",
-      "Warhammers",
-      "Whips",
+      "Axe",
+      "Ballista",
+      "Bow",
+      "Claw",
+      "Colossal Sword",
+      "Colossal Weapon",
+      "Crossbow",
+      "Curved Greatsword",
+      "Curved Sword",
+      "Dagger",
+      "Fist",
+      "Flail",
+      "Glintstone Staff",
+      "Great Hammer",
+      "Great Spear",
+      "Greataxe",
+      "Greatbow",
+      "Greatsword",
+      "Halberd",
+      "Hammer",
+      "Heavy Thrusting Sword",
+      "Katana",
+      "Light Bow",
+      "Reaper",
+      "Sacred Seal",
+      "Spear",
+      "Straight Sword",
+      "Thrusting Sword",
+      "Torch",
+      "Twinblade",
+      "Whip",
     ],
   }),
 
-  methods: {},
+  methods: {
+    setSelectedWeaponCategories() {
+      this.$emit("setSelectedWeaponCategories", this.selected);
+    },
+
+    getPlural(weaponCategory) {
+      let plural = "";
+
+      if (weaponCategory == "Ballista") {
+        plural = "Ballistae";
+      } else if (weaponCategory == "Glintstone Staff") {
+        plural = "Glintstone Staves";
+      } else if (weaponCategory == "Torch") {
+        plural = "Torches";
+      } else {
+        plural = weaponCategory + "s";
+      }
+
+      return plural;
+    },
+  },
+
+  computed: {},
+
+  watch: {
+    selected(weaponCategories) {
+      this.setSelectedWeaponCategories(weaponCategories);
+    },
+  },
 };
 </script>
