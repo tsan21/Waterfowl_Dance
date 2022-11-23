@@ -1,63 +1,50 @@
 <template>
   <v-sheet min-height="70vh" rounded="lg" elevation="3">
-    <v-card width="600px" style="display: flex; justify-content: space-between">
-      <div style="width: 400px">
-        <v-card-text style="display: flex; align-items: center">
-          <v-img
-            :src="require('@/assets/weaponIcon.png')"
-            style="margin-right: 10px"
-            max-height="25px"
-            max-width="25px"
-          >
-          </v-img>
-          <v-autocomplete
-            label="Weapon"
-            :items="weapons"
-            item-text="Name"
-            return-object
-            v-model="selectedWeapon"
-          >
-            <template v-slot:no-data>
-              <div class="px-4">Please select weapon categories</div>
-            </template>
-          </v-autocomplete>
-        </v-card-text>
+    <v-card width="600px" rounded="lg">
+      <v-app-bar dark elevation="1" color="main" dense>
+        Weapon Details
+      </v-app-bar>
 
-        <v-card-text style="display: flex; align-items: center">
-          <v-img
-            :src="require('@/assets/smithingStone.png')"
-            style="margin-right: 10px"
-            max-height="25px"
-            max-width="25px"
-          >
-          </v-img>
-          <v-autocomplete
-            label="Upgrade level"
-            :items="getUpgradeLevels()"
-            :item-text="(item) => item.prefix + item.value"
-            item-value="value"
-            v-model="upgradeLevel"
-          >
-            <template v-slot:no-data>
-              <div class="px-4">Select a weapon</div>
-            </template>
-          </v-autocomplete>
-        </v-card-text>
-      </div>
-
-      <v-card-text style="width: 200px">
-        <v-img
-          max-height="200px"
-          max-width="200px"
-          :src="
-            Object.keys(selectedWeapon).length > 0
-              ? require('@/assets/images/weapons/' +
-                  `${selectedWeapon['Image ID']}` +
-                  '.png')
-              : require('@/assets/weaponPlaceholder.png')
-          "
+      <v-card-text>
+        <v-autocomplete
+          label="Weapon"
+          :items="weapons"
+          item-text="Name"
+          return-object
+          v-model="selectedWeapon"
         >
-        </v-img>
+          <template v-slot:no-data>
+            <div class="px-4">Select at least 1 weapon category</div>
+          </template>
+        </v-autocomplete>
+      </v-card-text>
+
+      <v-card-text>
+        <v-autocomplete
+          label="Upgrade level"
+          :items="getUpgradeLevels()"
+          :item-text="(item) => item.prefix + item.value"
+          item-value="value"
+          v-model="upgradeLevel"
+        >
+          <template v-slot:no-data>
+            <div class="px-4">Select a weapon</div>
+          </template>
+        </v-autocomplete>
+      </v-card-text>
+
+      <v-card-text
+        v-if="
+          Object.keys(selectedWeapon).length > 0 &&
+          selectedWeapon['Infusable'] == 'Yes'
+        "
+      >
+        <v-autocomplete
+          label="Infusion"
+          v-model="selectedInfusion"
+          :items="infusions"
+        >
+        </v-autocomplete>
       </v-card-text>
     </v-card>
   </v-sheet>
@@ -75,7 +62,7 @@ export default {
   components: {},
 
   mounted() {
-    this.weaponData = require("@/assets/TarnishedSpreadsheet/Raw_Data.json");
+    this.weaponData = require("@/assets/TarnishedSpreadsheet/uniqueWeapons.json");
 
     // for (let cat of this.selectedWeaponCategories) {
     //   const a = this.weaponsData.find((w) => w['Weapon Type'] == cat);
@@ -89,7 +76,23 @@ export default {
   data: () => ({
     weaponData: [],
     selectedWeapon: {},
+    selectedInfusion: "Standard",
     upgradeLevel: 0,
+    infusions: [
+      "Standard",
+      "Heavy",
+      "Keen",
+      "Quality",
+      "Fire",
+      "Flame Art",
+      "Lightning",
+      "Sacred",
+      "Magic",
+      "Cold",
+      "Poison",
+      "Blood",
+      "Occult",
+    ],
   }),
 
   methods: {
