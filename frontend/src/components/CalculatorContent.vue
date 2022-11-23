@@ -38,11 +38,14 @@
             item-value="value"
             v-model="upgradeLevel"
           >
+            <template v-slot:no-data>
+              <div class="px-4">Select a weapon</div>
+            </template>
           </v-autocomplete>
         </v-card-text>
       </div>
 
-      <v-card-text style="width: 200px;">
+      <v-card-text style="width: 200px">
         <v-img
           max-height="200px"
           max-width="200px"
