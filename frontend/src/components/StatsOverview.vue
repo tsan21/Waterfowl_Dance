@@ -34,7 +34,9 @@
       <v-divider class="my-2"></v-divider>
 
       <v-list-item color="grey lighten-4">
-        <v-btn @click="setStats" width="100%" text color="primary">Reset</v-btn>
+        <v-btn @click="setBaseStats" width="100%" text color="primary"
+          >Reset</v-btn
+        >
       </v-list-item>
     </v-list>
   </v-sheet>
@@ -48,11 +50,12 @@ export default {
   components: {},
 
   mounted() {
+    this.setBaseStats();
     this.setStats();
   },
 
   data: () => ({
-    baseLevel: 10,
+    baseLevel: 1,
     maxLevel: 99,
     stats: [
       { name: "Strength", level: null },
@@ -65,10 +68,20 @@ export default {
   }),
 
   methods: {
-    setStats() {
+    setBaseStats() {
       for (let stat of this.stats) {
         stat.level = this.baseLevel;
       }
+    },
+
+    setStats() {
+      this.$emit("setStats", this.stats);
+    },
+  },
+
+  watch: {
+    stats(val) {
+      this.setStats(val);
     },
   },
 };
