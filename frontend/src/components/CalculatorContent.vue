@@ -7,7 +7,7 @@
   
 
 <script>
-import WeaponDetails from "@/components/CalculatorContentChildren/WeaponDetails.vue";
+import WeaponDetails from "@/components/WeaponDetails.vue";
 
 export default {
   name: "CalculatorContent",

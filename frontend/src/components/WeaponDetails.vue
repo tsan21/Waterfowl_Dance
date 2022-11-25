@@ -91,7 +91,7 @@
               <tr>
                 <td><!-- Scaling letters --></td>
                 <td
-                  v-for="item, index in tableData"
+                  v-for="(item, index) in tableData"
                   :key="item.reqStat"
                   :class="
                     getStatColor(item.reqStat, provided.stats[index].level)
@@ -120,12 +120,15 @@ export default {
   mounted() {
     this.weaponData = require("@/assets/TarnishedSpreadsheet/uniqueWeapons.json");
     this.scalingLetters = require("@/assets/TarnishedSpreadsheet/Scaling_Letters.json");
+    this.rawData = require("@/assets/TarnishedSpreadsheet/Raw_Data.json");
   },
 
   data: () => ({
     weaponData: [],
     scalingLetters: [],
+    rawData: [],
     selectedWeapon: {},
+    // weaponAfterInfusion: {},
     selectedInfusion: "Standard",
     upgradeLevel: 0,
     infusions: [
@@ -154,11 +157,11 @@ export default {
 
   methods: {
     getStatColor(reqStat, myStatLvl) {
-      const statName = this.selectedWeapon[reqStat];
+      const requiredStat = this.selectedWeapon[reqStat];
 
-      if (Number(statName) == 0) {
+      if (Number(requiredStat) == 0) {
         return "";
-      } else if (myStatLvl >= Number(statName)) {
+      } else if (myStatLvl >= Number(requiredStat)) {
         return "sufficient-stat-req";
       } else {
         return "insufficient-stat-req";
@@ -167,27 +170,20 @@ export default {
 
     getScalingLetter(scalingStat) {
       let letter = "";
+      let weaponName = "";
+
+      if (this.selectedInfusion == "Standard") {
+        weaponName = this.selectedWeapon.Name;
+      } else {
+        weaponName = this.selectedInfusion + " " + this.selectedWeapon.Name;
+      }
 
       for (let obj of this.scalingLetters) {
-        let weaponName = "";
-
-        if (this.selectedInfusion == "Standard") {
-          weaponName = this.selectedWeapon.Name;
-          if (obj.Name == weaponName) {
-            if (this.upgradeLevel == 0) {
-              letter = obj[scalingStat];
-            } else {
-              letter = obj[scalingStat + " +" + this.upgradeLevel];
-            }
-          }
-        } else {
-          weaponName = this.selectedInfusion + " " + this.selectedWeapon.Name;
-          if (obj.Name == weaponName) {
-            if (this.upgradeLevel == 0) {
-              letter = obj[scalingStat];
-            } else {
-              letter = obj[scalingStat + " +" + this.upgradeLevel];
-            }
+        if (obj.Name == weaponName) {
+          if (this.upgradeLevel == 0) {
+            letter = obj[scalingStat];
+          } else {
+            letter = obj[scalingStat + " +" + this.upgradeLevel];
           }
         }
       }
@@ -212,10 +208,6 @@ export default {
       this.selectedWeapon = {};
       this.upgradeLevel = 0;
     },
-
-    displayRequiredStat(stat) {
-      return this.selectedWeapon[stat];
-    },
   },
 
   computed: {
@@ -237,6 +229,18 @@ export default {
         }
       },
       deep: true,
+    },
+
+    selectedInfusion(newInfusion) {
+      let weaponName = "";
+
+      if (newInfusion == "Standard") {
+        weaponName = this.selectedWeapon.Name;
+      } else {
+        weaponName = newInfusion + " " + this.selectedWeapon.Name;
+      }
+
+      this.selectedWeapon = this.rawData.find((w) => w.Name == weaponName);
     },
   },
 };
