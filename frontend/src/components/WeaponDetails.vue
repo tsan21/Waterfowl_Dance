@@ -10,7 +10,7 @@
         :items="weapons"
         item-text="Name"
         return-object
-        v-model="selectedWeapon"
+        v-model="baseWeapon"
       >
         <template v-slot:no-data>
           <div class="px-4">Select at least 1 weapon category</div>
@@ -34,8 +34,7 @@
 
     <v-card-text
       v-if="
-        Object.keys(selectedWeapon).length > 0 &&
-        selectedWeapon['Infusable'] == 'Yes'
+        Object.keys(baseWeapon).length > 0 && baseWeapon['Infusable'] == 'Yes'
       "
     >
       <v-autocomplete
@@ -46,7 +45,7 @@
       </v-autocomplete>
     </v-card-text>
 
-    <v-card-text v-if="Object.keys(selectedWeapon).length > 0">
+    <v-card-text v-if="Object.keys(finalWeapon).length > 0">
       <v-card>
         <v-simple-table>
           <template v-slot:default>
@@ -71,7 +70,7 @@
                     getStatColor(item.reqStat, provided.stats[index].level)
                   "
                 >
-                  {{ selectedWeapon[item.reqStat] }}
+                  {{ finalWeapon[item.reqStat] }}
                 </td>
               </tr>
 
@@ -84,7 +83,7 @@
                     getStatColor(item.reqStat, provided.stats[index].level)
                   "
                 >
-                  {{ selectedWeapon[item.scaling] }}
+                  {{ finalWeapon[item.scaling] }}
                 </td>
               </tr>
 
@@ -110,6 +109,11 @@
 
 
 <script>
+import Calculator from "@/services/calculator";
+import ReinforceParamWeaponModel from "@/models/reinforceParamWeaponModel";
+
+const calculator = new Calculator();
+
 export default {
   name: "WeaponDetails",
 
@@ -121,14 +125,16 @@ export default {
     this.weaponData = require("@/assets/TarnishedSpreadsheet/uniqueWeapons.json");
     this.scalingLetters = require("@/assets/TarnishedSpreadsheet/Scaling_Letters.json");
     this.rawData = require("@/assets/TarnishedSpreadsheet/Raw_Data.json");
+
+    calculator.test();
   },
 
   data: () => ({
     weaponData: [],
     scalingLetters: [],
     rawData: [],
-    selectedWeapon: {},
-    // weaponAfterInfusion: {},
+    baseWeapon: {},
+    finalWeapon: {},
     selectedInfusion: "Standard",
     upgradeLevel: 0,
     infusions: [
@@ -157,7 +163,7 @@ export default {
 
   methods: {
     getStatColor(reqStat, myStatLvl) {
-      const requiredStat = this.selectedWeapon[reqStat];
+      const requiredStat = this.finalWeapon[reqStat];
 
       if (Number(requiredStat) == 0) {
         return "";
@@ -173,9 +179,9 @@ export default {
       let weaponName = "";
 
       if (this.selectedInfusion == "Standard") {
-        weaponName = this.selectedWeapon.Name;
+        weaponName = this.baseWeapon.Name;
       } else {
-        weaponName = this.selectedInfusion + " " + this.selectedWeapon.Name;
+        weaponName = this.selectedInfusion + " " + this.baseWeapon.Name;
       }
 
       for (let obj of this.scalingLetters) {
@@ -194,9 +200,9 @@ export default {
     getUpgradeLevels() {
       let levels = [];
       const prefix = "+ ";
-      const maxUpgradeLevel = Number(this.selectedWeapon["Max Upgrade"]) + 1;
+      const maxUpgradeLevel = Number(this.baseWeapon["Max Upgrade"]) + 1;
 
-      if (this.selectedWeapon) {
+      if (this.baseWeapon) {
         for (let i = 0; i < maxUpgradeLevel; i++) {
           levels.push({ prefix: prefix, value: i });
         }
@@ -205,8 +211,10 @@ export default {
     },
 
     clearSelectedValues() {
-      this.selectedWeapon = {};
+      this.baseWeapon = {};
+      this.finalWeapon = {};
       this.upgradeLevel = 0;
+      this.selectedInfusion = "Standard";
     },
   },
 
@@ -219,28 +227,54 @@ export default {
       }
       return weapons.flat();
     },
+
+    reinforceParamWeapon() {
+      const reinforceParamWeaponModel = new ReinforceParamWeaponModel(
+        this.finalWeapon["Reinforce Type ID"],
+        this.finalWeapon["Physical Attack"],
+        this.finalWeapon["Magic Attack"],
+        this.finalWeapon["Fire Attack"],
+        this.finalWeapon["Lightning Attack"],
+        this.finalWeapon["Holy Attack"],
+        this.finalWeapon["Stamina Attack"],
+        this.finalWeapon["Str Scaling"],
+        this.finalWeapon["Dex Scaling"],
+        this.finalWeapon["Int Scaling"],
+        this.finalWeapon["Fai Scaling"],
+        this.finalWeapon["Arc Scaling"]
+      );
+      calculator.reinforceParamWeapon(reinforceParamWeaponModel, 123)
+      return reinforceParamWeaponModel;
+    },
   },
 
   watch: {
     provided: {
-      handler(obj) {
-        if (obj.weaponCategories.length == 0) {
+      handler(selected) {
+        if (selected.weaponCategories.length == 0) {
           this.clearSelectedValues();
         }
       },
       deep: true,
     },
 
+    baseWeapon(val) {
+      this.selectedInfusion = "Standard";
+      this.finalWeapon = val;
+    },
+
     selectedInfusion(newInfusion) {
       let weaponName = "";
 
       if (newInfusion == "Standard") {
-        weaponName = this.selectedWeapon.Name;
+        weaponName = this.baseWeapon.Name;
       } else {
-        weaponName = newInfusion + " " + this.selectedWeapon.Name;
+        weaponName = newInfusion + " " + this.baseWeapon.Name;
       }
 
-      this.selectedWeapon = this.rawData.find((w) => w.Name == weaponName);
+      if (Object.keys(this.baseWeapon).length > 0) {
+        this.finalWeapon = this.rawData.find((w) => w.Name == weaponName);
+      }
     },
   },
 };
