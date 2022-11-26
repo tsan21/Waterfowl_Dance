@@ -28,7 +28,7 @@
             :src="require('@/assets/smithingStone.png')"
             style="margin-right: 10px"
             max-height="25px"
-            max-width="25px"
+            max-width="25px" 
           >
           </v-img>
           <v-autocomplete
