@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="2">
-        <stats-overview></stats-overview>
+        <stats-overview @setStats="setStats"></stats-overview>
       </v-col>
 
       <v-col>
@@ -10,15 +10,13 @@
           @setSelectedWeaponCategories="setSelectedWeaponCategories"
         ></weapon-categories>
 
-        <calculator-content
-          :selectedWeaponCategories="selectedWeaponCategories"
-          class="top-gap"
-        ></calculator-content>
+        <calculator-content class="top-gap"></calculator-content>
       </v-col>
     </v-row>
     <br />
   </v-container>
 </template>
+
 
 <script>
 import StatsOverview from "@/components/StatsOverview.vue";
@@ -34,19 +32,42 @@ export default {
     WeaponCategories,
   },
 
+  provide() {
+    const provided = {};
+    Object.defineProperty(provided, "weaponCategories", {
+      enumerable: true,
+      get: () => this.selectedWeaponCategories,
+    });
+    Object.defineProperty(provided, "stats", {
+      enumerable: true,
+      get: () => this.stats,
+    });
+    return { provided };
+  },
+
   mounted() {},
 
   data: () => ({
     selectedWeaponCategories: [],
+    stats: [],
   }),
 
   methods: {
     setSelectedWeaponCategories(val) {
       this.selectedWeaponCategories = val;
     },
+
+    setStats(val) {
+      this.stats = val;
+    },
   },
+
+  computed: {},
+
+  watch: {},
 };
 </script>
+
 
 <style>
 .top-gap {

@@ -34,7 +34,7 @@
     <v-footer padless color="main2" style="z-index: 10">
       <v-col class="text-center" cols="12">
         <span class="white--text text-center"
-          >&copy; Waterfowl Dance — Tsan Yip Wong</span
+          >&copy; Waterfowl Dance — T.Y. W.</span
         >
       </v-col>
     </v-footer>

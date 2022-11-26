@@ -38,6 +38,8 @@ export default {
     //   cats.push(b["Weapon Type"]);
     // }
     // console.log(cats);
+
+    
   },
 
   data: () => ({
