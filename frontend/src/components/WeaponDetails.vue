@@ -83,7 +83,7 @@
                     getStatColor(item.reqStat, provided.stats[index].level)
                   "
                 >
-                  {{ finalWeapon[item.scaling] }}
+                  {{ weaponAttackAndScaling[item.scaling] }}
                 </td>
               </tr>
 
@@ -109,10 +109,8 @@
 
 
 <script>
-import Calculator from "@/services/calculator";
-import ReinforceParamWeaponModel from "@/models/reinforceParamWeaponModel";
-
-const calculator = new Calculator();
+import ReinforceParamWeapon from "@/services/reinforceParamWeapon";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "WeaponDetails",
@@ -125,8 +123,6 @@ export default {
     this.weaponData = require("@/assets/TarnishedSpreadsheet/uniqueWeapons.json");
     this.scalingLetters = require("@/assets/TarnishedSpreadsheet/Scaling_Letters.json");
     this.rawData = require("@/assets/TarnishedSpreadsheet/Raw_Data.json");
-
-    calculator.test();
   },
 
   data: () => ({
@@ -202,10 +198,10 @@ export default {
       const prefix = "+ ";
       const maxUpgradeLevel = Number(this.baseWeapon["Max Upgrade"]) + 1;
 
-      if (this.baseWeapon) {
-        for (let i = 0; i < maxUpgradeLevel; i++) {
-          levels.push({ prefix: prefix, value: i });
-        }
+      // if (this.baseWeapon) {
+      for (let i = 0; i < maxUpgradeLevel; i++) {
+        levels.push({ prefix: prefix, value: i });
+        // }
       }
       return levels;
     },
@@ -215,6 +211,10 @@ export default {
       this.finalWeapon = {};
       this.upgradeLevel = 0;
       this.selectedInfusion = "Standard";
+    },
+
+    emitWeaponAttackAndScaling(data) {
+      EventBus.$emit("WEAPON_ATTACK_AND_SCALING", data);
     },
   },
 
@@ -228,23 +228,33 @@ export default {
       return weapons.flat();
     },
 
-    reinforceParamWeapon() {
-      const reinforceParamWeaponModel = new ReinforceParamWeaponModel(
-        this.finalWeapon["Reinforce Type ID"],
-        this.finalWeapon["Physical Attack"],
-        this.finalWeapon["Magic Attack"],
-        this.finalWeapon["Fire Attack"],
-        this.finalWeapon["Lightning Attack"],
-        this.finalWeapon["Holy Attack"],
-        this.finalWeapon["Stamina Attack"],
-        this.finalWeapon["Str Scaling"],
-        this.finalWeapon["Dex Scaling"],
-        this.finalWeapon["Int Scaling"],
-        this.finalWeapon["Fai Scaling"],
-        this.finalWeapon["Arc Scaling"]
-      );
-      calculator.reinforceParamWeapon(reinforceParamWeaponModel, 123)
-      return reinforceParamWeaponModel;
+    weaponAttackAndScaling() {
+      let data = {};
+
+      if (Object.keys(this.finalWeapon).length > 0) {
+        const reinforceId = this.finalWeapon["Reinforce Type ID"];
+
+        const reinforceParamWeapon = new ReinforceParamWeapon(
+          this.finalWeapon["Physical Attack"],
+          this.finalWeapon["Magic Attack"],
+          this.finalWeapon["Fire Attack"],
+          this.finalWeapon["Lightning Attack"],
+          this.finalWeapon["Holy Attack"],
+          this.finalWeapon["Stamina Attack"],
+          this.finalWeapon["Str Scaling"],
+          this.finalWeapon["Dex Scaling"],
+          this.finalWeapon["Int Scaling"],
+          this.finalWeapon["Fai Scaling"],
+          this.finalWeapon["Arc Scaling"]
+        );
+
+        data = reinforceParamWeapon.calcAttackAndScaling(
+          reinforceId,
+          this.upgradeLevel
+        );
+      }
+
+      return data;
     },
   },
 
@@ -275,6 +285,10 @@ export default {
       if (Object.keys(this.baseWeapon).length > 0) {
         this.finalWeapon = this.rawData.find((w) => w.Name == weaponName);
       }
+    },
+
+    weaponAttackAndScaling(data) {
+      this.emitWeaponAttackAndScaling(data);
     },
   },
 };

@@ -19,6 +19,7 @@
 
 
 <script>
+import { EventBus } from "@/services/eventBus";
 import StatsOverview from "@/components/StatsOverview.vue";
 import CalculatorContent from "@/components/CalculatorContent.vue";
 import WeaponCategories from "@/components/WeaponCategories.vue";
@@ -34,6 +35,7 @@ export default {
 
   provide() {
     const provided = {};
+
     Object.defineProperty(provided, "weaponCategories", {
       enumerable: true,
       get: () => this.selectedWeaponCategories,
@@ -42,7 +44,14 @@ export default {
       enumerable: true,
       get: () => this.stats,
     });
+
     return { provided };
+  },
+
+  created() {
+    EventBus.$on("WEAPON_ATTACK_AND_SCALING", (data) => {
+      this.weaponAttackAndScaling = data;
+    });
   },
 
   mounted() {},
@@ -50,6 +59,8 @@ export default {
   data: () => ({
     selectedWeaponCategories: [],
     stats: [],
+    weaponAttackAndScaling: {},
+    attackElementCorrectId: "",
   }),
 
   methods: {

@@ -57,6 +57,7 @@ export default {
   data: () => ({
     baseLevel: 1,
     maxLevel: 99,
+    attackElementCorrectId: "",
     stats: [
       { name: "Strength", level: null },
       { name: "Dexterity", level: null },
