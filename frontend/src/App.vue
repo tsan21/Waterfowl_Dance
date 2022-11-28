@@ -27,7 +27,7 @@
       </v-container>
     </v-app-bar>
 
-    <v-main class="grey lighten-3" style="margin-top: 10px">
+    <v-main class="grey lighten-3" style="margin-top: 10px;">
       <home-view></home-view>
     </v-main>
 

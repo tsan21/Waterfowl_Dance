@@ -24,14 +24,15 @@ export default class ReinforceParamWeapon {
     // Functions
     calcAttackAndScaling(reinforceId, upgradeLevel) {
         const finalReinforceId = (Number(reinforceId) + Number(upgradeLevel))
-        const reinforceMultiplier = ReinforceParamWeapon.REINFORCE_PARAM_WEAPON.find((x) => x['ID'] == finalReinforceId)
+        const reinforceMultiplier = ReinforceParamWeapon.REINFORCE_PARAM_WEAPON
+            .find((x) => x['ID'] == finalReinforceId)
+
         let returnData = {}
 
         for (let [key, val] of Object.entries(this)) {
             val *= reinforceMultiplier[key]
             returnData[key] = val
         }
-
         return returnData
     }
 }

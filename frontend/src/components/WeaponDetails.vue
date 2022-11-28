@@ -1,5 +1,5 @@
 <template>
-  <v-card width="600px" rounded="lg">
+  <v-card rounded="lg">
     <v-app-bar dark elevation="1" color="main" dense>
       Weapon Details
     </v-app-bar>
@@ -216,6 +216,10 @@ export default {
     emitWeaponAttackAndScaling(data) {
       EventBus.$emit("WEAPON_ATTACK_AND_SCALING", data);
     },
+
+    emitFinalWeapon(weapon){
+      EventBus.$emit("SET_FINAL_WEAPON", weapon)
+    },
   },
 
   computed: {
@@ -271,6 +275,10 @@ export default {
     baseWeapon(val) {
       this.selectedInfusion = "Standard";
       this.finalWeapon = val;
+    },
+
+    finalWeapon(val){
+      this.emitFinalWeapon(val)
     },
 
     selectedInfusion(newInfusion) {

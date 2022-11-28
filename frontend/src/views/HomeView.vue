@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <v-row>
+  <v-container style="background-color: ;">
+    <v-row style="display: flex">
       <v-col cols="2">
         <stats-overview @setStats="setStats"></stats-overview>
       </v-col>
@@ -36,21 +36,29 @@ export default {
   provide() {
     const provided = {};
 
-    Object.defineProperty(provided, "weaponCategories", {
-      enumerable: true,
-      get: () => this.selectedWeaponCategories,
+    Object.defineProperties(provided, {
+      weaponCategories: {
+        enumerable: true,
+        get: () => this.selectedWeaponCategories,
+      },
+      stats: {
+        enumerable: true,
+        get: () => this.stats,
+      },
+      finalWeapon: {
+        get: () => this.finalWeapon,
+      },
     });
-    Object.defineProperty(provided, "stats", {
-      enumerable: true,
-      get: () => this.stats,
-    });
-
     return { provided };
   },
 
   created() {
     EventBus.$on("WEAPON_ATTACK_AND_SCALING", (data) => {
       this.weaponAttackAndScaling = data;
+    });
+
+    EventBus.$on("SET_FINAL_WEAPON", (weapon) => {
+      this.finalWeapon = weapon;
     });
   },
 
@@ -61,6 +69,7 @@ export default {
     stats: [],
     weaponAttackAndScaling: {},
     attackElementCorrectId: "",
+    finalWeapon: {},
   }),
 
   methods: {
