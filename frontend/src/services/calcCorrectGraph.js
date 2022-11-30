@@ -30,27 +30,51 @@ export default class CalcCorrectGraph {
         return calcCorrect
     }
 
-    // getWeaponScalingAttributes(data){
+    calcCorrectFormula(statLevel, calcCorrectGraphId) {
+        let statMin = 0
+        let statMax = 0
+        let minNumber = 0
+        let maxNumber = 0
+        let exponentMin = 0
+        let exponentMinKey = 0
+        let growMinKey = 0
+        let growMaxKey = 0
+        let growMin = 0
+        let growMax = 0
+        let growth = 0
 
+        for (const [key, currVal] of Object.entries(calcCorrectGraphId)) {
+            if (key.includes("Stat")) {
+                const keys = Object.keys(calcCorrectGraphId);
+                const nextKey = keys[(keys.indexOf(key) + 1) % keys.length]
+                const nextVal = calcCorrectGraphId[nextKey]
 
-    // }
-
-    calcCorrectFormula(statLevel/*, calcCorrect*/) {
-        const statMin = 0
-        const statMax = 0
-        const ratio = (statLevel - statMin) / (statMax - statMin)
-
-        if (statLevel > 500 && statLevel < 600) {
-            // ...
+                if (statLevel > currVal && statLevel < nextVal) {
+                    statMin = currVal
+                    statMax = nextVal
+                    minNumber = key.split(" ")[1]
+                    maxNumber = nextKey.split(" ")[1]
+                    exponentMinKey = "Exponent " + minNumber
+                    exponentMin = calcCorrectGraphId[exponentMinKey]
+                    growMinKey = "Grow " + minNumber
+                    growMaxKey = "Grow " + maxNumber
+                    growMin = calcCorrectGraphId[growMinKey]
+                    growMax = calcCorrectGraphId[growMaxKey]
+                }
+            }
         }
 
-        // const exponentMin = 0
-        // const growMin = 0
-        // const growMax = 0
+        const ratio = (statLevel - statMin) / (statMax - statMin)
 
-        // const growth = 0
-        // const output = 0
+        if (exponentMin > 0) {
+            growth = Math.pow(ratio, exponentMin)
+        }
+        if (exponentMin < 0) {
+            growth = 1 - Math.pow(1 - ratio, exponentMin)
+        }
 
-        return ratio
+        const output = Number(growMin) + Number((growMax - growMin) * growth)
+
+        return output
     }
 }

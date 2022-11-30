@@ -48,6 +48,9 @@ export default {
       finalWeapon: {
         get: () => this.finalWeapon,
       },
+      weaponAttackAndScaling: {
+        get: () => this.weaponAttackAndScaling,
+      },
     });
     return { provided };
   },

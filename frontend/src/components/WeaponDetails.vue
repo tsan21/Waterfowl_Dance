@@ -145,7 +145,7 @@ export default {
       "Magic",
       "Cold",
       "Poison",
-      "Blood",
+      "Bloody",
       "Occult",
     ],
     tableData: [
@@ -217,8 +217,8 @@ export default {
       EventBus.$emit("WEAPON_ATTACK_AND_SCALING", data);
     },
 
-    emitFinalWeapon(weapon){
-      EventBus.$emit("SET_FINAL_WEAPON", weapon)
+    emitFinalWeapon(weapon) {
+      EventBus.$emit("SET_FINAL_WEAPON", weapon);
     },
   },
 
@@ -274,11 +274,12 @@ export default {
 
     baseWeapon(val) {
       this.selectedInfusion = "Standard";
+      this.upgradeLevel = 0;
       this.finalWeapon = val;
     },
 
-    finalWeapon(val){
-      this.emitFinalWeapon(val)
+    finalWeapon(val) {
+      this.emitFinalWeapon(val);
     },
 
     selectedInfusion(newInfusion) {
