@@ -1,10 +1,10 @@
 <template>
   <!--remove elevation later -->
-  <v-sheet min-height="70vh" rounded="lg" elevation="3" class="grey lighten-3 calc-content">
-    <div style="width: 44%">
+  <v-sheet min-height="70vh" rounded="lg" elevation="" class="grey lighten-3 calc-content">
+    <div style="width: 40%">
       <weapon-details></weapon-details>
     </div>
-    <div style="width: 54%">
+    <div style="width: 40%">
       <attack-rating></attack-rating>
     </div>
   </v-sheet>
@@ -38,6 +38,6 @@ export default {
 <style>
 .calc-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 </style>

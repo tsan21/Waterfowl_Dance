@@ -1,8 +1,22 @@
 <template>
-  <v-card rounded="lg" height="500px">
+  <v-card rounded="lg">
     <v-app-bar dark elevation="1" color="main" dense> Attack Rating </v-app-bar>
 
-    <v-card-text> fsdfsdfds </v-card-text>
+    <v-card-text
+      v-for="ar in attackRatings"
+      :key="ar.dmgType"
+      style="display: flex; justify-content: space-between"
+    >
+      <div>{{ ar.dmgType }}</div>
+      <div>{{ test(ar.dmgType) }}</div>
+    </v-card-text>
+
+    <v-divider></v-divider>
+
+    <v-card-text style="display: flex; justify-content: space-between">
+      <b>Total:</b>
+      <b>{{ calcAttackRating() }}</b>
+    </v-card-text>
   </v-card>
 </template>
   
@@ -25,24 +39,69 @@ export default {
 
   data: () => ({
     calcCorrectGraph: {},
+    attackRatings: [
+      { dmgType: "Physical", attackRating: "N/A" },
+      { dmgType: "Magic", attackRating: "N/A" },
+      { dmgType: "Fire", attackRating: "N/A" },
+      { dmgType: "Lightning", attackRating: "N/A" },
+      { dmgType: "Holy", attackRating: "N/A" },
+    ],
   }),
 
   methods: {
-    findScalingFor(skill) {
-      let scaling = "";
-
-      for (const [key, val] of Object.entries(this.getWeaponScaling)) {
-        if (skill.toLowerCase() == key.toLowerCase()) {
-          scaling = val;
-        }
-      }
-      return scaling;
+    findStatLevelBy(abbrev) {
+      const stat = this.provided.stats.find((s) => s.name.includes(abbrev));
+      return stat.level;
     },
 
-    // loop this
-    calcAttackRating(baseAR, scaling, calcCorrectOutput) {
-      let attackRating = baseAR * (scaling / 100) * (calcCorrectOutput / 100);
-      return attackRating;
+    findCalcCorrectGraphIdBy(damageType) {
+      let calcCorrectGraphId = {};
+
+      for (const [key, val] of Object.entries(this.calcCorrectGraph)) {
+        if (key.includes(damageType)) {
+          calcCorrectGraphId = val;
+        }
+      }
+      return calcCorrectGraphId;
+    },
+
+    test(dmgType) {
+      let output = 0;
+
+      for (const cC of this.getScalingStatsPerDmgType) {
+        if (cC.dmgType == dmgType) {
+          const statLevel = this.findStatLevelBy(cC.scalesWith);
+          const calcCorrectGraphId = this.findCalcCorrectGraphIdBy(cC.dmgType);
+          const calcCorrectOutput = calcCorrect.calcCorrectFormula(
+            statLevel,
+            calcCorrectGraphId
+          );
+          const bonusDmg =
+            cC.baseDmg * (cC.scaling / 100) * (calcCorrectOutput / 100);
+
+          output = output + cC.baseDmg + bonusDmg;
+        }
+      }
+      return output;
+    },
+
+    calcAttackRating() {
+      let totalAR = 0;
+
+      for (let cC of this.getScalingStatsPerDmgType) {
+        const statLevel = this.findStatLevelBy(cC.scalesWith);
+        const calcCorrectGraphId = this.findCalcCorrectGraphIdBy(cC.dmgType);
+        const calcCorrectOutput = calcCorrect.calcCorrectFormula(
+          statLevel,
+          calcCorrectGraphId
+        );
+
+        const bonusDmg =
+          cC.baseDmg * (cC.scaling / 100) * (calcCorrectOutput / 100);
+
+        totalAR = totalAR + cC.baseDmg + bonusDmg;
+      }
+      return totalAR;
     },
   },
 
@@ -95,7 +154,7 @@ export default {
         );
 
         for (const [key, value] of weaponAttackAndScaling) {
-          if (key.includes("Scaling") && key && value > 0) {
+          if (key.includes("Scaling") && value > 0) {
             const newKey = key.split(" ")[0];
             attackTypes[newKey] = value;
           }
@@ -104,7 +163,7 @@ export default {
       return attackTypes;
     },
 
-    calcCorrectFormulaData() {
+    getScalingStatsPerDmgType() {
       let data = [];
 
       for (const [key1, val1] of Object.entries(this.getWeaponAttackTypes)) {
@@ -112,29 +171,33 @@ export default {
           this.getAttackElementCorrectParam
         )) {
           if (key2.includes(key1)) {
-            const skill = key2.split(": ")[1];
+            // Capitalize first letter, lowercase the rest
+            let stat = key2.split(": ")[1];
+            stat = stat.charAt(0) + stat.substring(1).toLowerCase();
+
             let obj = {
-              attackType: key1,
-              attack: val1,
-              scalesWith: skill,
-              scaling: this.findScalingFor(skill),
+              dmgType: key1,
+              baseDmg: val1,
+              scalesWith: stat,
+              scaling: this.getWeaponScaling[stat],
             };
 
             data.push(obj);
           }
         }
       }
+      // Groupby dmgType
       return data;
     },
 
-    // change values
+    // Test
     calcCorrectFormula() {
       let output = 0;
 
       if (Object.keys(this.calcCorrectGraph).length > 0) {
         output = calcCorrect.calcCorrectFormula(
-          14,
-          this.calcCorrectGraph["CalcCorrectGraph ID (Physical)"]
+          40,
+          this.calcCorrectGraph["CalcCorrectGraph ID (Magic)"]
         );
       }
       return output;

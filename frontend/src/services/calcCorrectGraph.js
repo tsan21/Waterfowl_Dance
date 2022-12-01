@@ -70,7 +70,7 @@ export default class CalcCorrectGraph {
             growth = Math.pow(ratio, exponentMin)
         }
         if (exponentMin < 0) {
-            growth = 1 - Math.pow(1 - ratio, exponentMin)
+            growth = 1 - Math.pow((1 - ratio), Math.abs(exponentMin))
         }
 
         const output = Number(growMin) + Number((growMax - growMin) * growth)
