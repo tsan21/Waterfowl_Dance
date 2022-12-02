@@ -3,5 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: [
     'vuetify'
   ],
-  publicPath: '/Waterfowl_Dance/',
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/Waterfowl_Dance/'
+    : '/'
 })
