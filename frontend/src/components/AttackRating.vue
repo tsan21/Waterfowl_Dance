@@ -74,7 +74,7 @@ export default {
       if (list) {
         for (const cC of list) {
           baseDmg = cC.baseDmg;
-
+          // Todo: handle cC.scaling==undefined elsewhere
           if (cC.scaling) {
             const statLevel = this.findStatLevelBy(cC.scalesWith);
             const calcCorrectGraphId = this.findCalcCorrectGraphIdBy(
@@ -175,6 +175,7 @@ export default {
       return attackTypes;
     },
 
+    // Todo: obj.scaling is sometimes undefined
     getScalingStatsPerDmgType() {
       let data = [];
 
