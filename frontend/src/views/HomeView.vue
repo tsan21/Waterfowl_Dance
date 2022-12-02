@@ -1,5 +1,5 @@
 <template>
-  <v-container style="background-color: ;">
+  <v-container>
     <v-row style="display: flex">
       <v-col cols="2">
         <stats-overview @setStats="setStats"></stats-overview>
@@ -10,7 +10,8 @@
           @setSelectedWeaponCategories="setSelectedWeaponCategories"
         ></weapon-categories>
 
-        <calculator-content class="top-gap"></calculator-content>
+        <br />
+        <calculator-content></calculator-content>
       </v-col>
     </v-row>
     <br />
@@ -93,7 +94,4 @@ export default {
 
 
 <style>
-.top-gap {
-  margin-top: 10px;
-}
 </style>

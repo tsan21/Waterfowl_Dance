@@ -1,6 +1,6 @@
 <template>
   <!--remove elevation later -->
-  <v-sheet min-height="70vh" rounded="lg" elevation="" class="grey lighten-3 calc-content">
+  <v-sheet min-height="" rounded="lg" elevation="" class="grey lighten-3 calc-content">
     <div style="width: 40%">
       <weapon-details></weapon-details>
     </div>

@@ -3,19 +3,19 @@
     <v-app-bar dark elevation="1" color="main" dense> Attack Rating </v-app-bar>
 
     <v-card-text
-      v-for="ar in attackRatings"
-      :key="ar.dmgType"
+      v-for="item in attackRatings"
+      :key="item.dmgType"
       style="display: flex; justify-content: space-between"
     >
-      <div>{{ ar.dmgType }}</div>
-      <div>{{ test(ar.dmgType) }}</div>
+      <div>{{ item.dmgType }}</div>
+      <div>{{ calcAttackRatingFor(item.dmgType) }}</div>
     </v-card-text>
 
     <v-divider></v-divider>
 
     <v-card-text style="display: flex; justify-content: space-between">
       <b>Total:</b>
-      <b>{{ calcAttackRating() }}</b>
+      <b>{{ calcTotalAttackRating() }}</b>
     </v-card-text>
   </v-card>
 </template>
@@ -40,11 +40,11 @@ export default {
   data: () => ({
     calcCorrectGraph: {},
     attackRatings: [
-      { dmgType: "Physical", attackRating: "N/A" },
-      { dmgType: "Magic", attackRating: "N/A" },
-      { dmgType: "Fire", attackRating: "N/A" },
-      { dmgType: "Lightning", attackRating: "N/A" },
-      { dmgType: "Holy", attackRating: "N/A" },
+      { dmgType: "Physical", attackRating: 0 },
+      { dmgType: "Magic", attackRating: 0 },
+      { dmgType: "Fire", attackRating: 0 },
+      { dmgType: "Lightning", attackRating: 0 },
+      { dmgType: "Holy", attackRating: 0 },
     ],
   }),
 
@@ -65,43 +65,55 @@ export default {
       return calcCorrectGraphId;
     },
 
-    test(dmgType) {
+    calcAttackRatingFor(dmgType) {
       let output = 0;
+      let baseDmg = 0;
+      let totalBonusDmg = 0;
+      let list = this.getScalingStatsPerDmgType[dmgType];
 
-      for (const cC of this.getScalingStatsPerDmgType) {
-        if (cC.dmgType == dmgType) {
-          const statLevel = this.findStatLevelBy(cC.scalesWith);
-          const calcCorrectGraphId = this.findCalcCorrectGraphIdBy(cC.dmgType);
-          const calcCorrectOutput = calcCorrect.calcCorrectFormula(
-            statLevel,
-            calcCorrectGraphId
-          );
-          const bonusDmg =
-            cC.baseDmg * (cC.scaling / 100) * (calcCorrectOutput / 100);
+      if (list) {
+        for (const cC of list) {
+          baseDmg = cC.baseDmg;
 
-          output = output + cC.baseDmg + bonusDmg;
+          if (cC.scaling) {
+            const statLevel = this.findStatLevelBy(cC.scalesWith);
+            const calcCorrectGraphId = this.findCalcCorrectGraphIdBy(
+              cC.dmgType
+            );
+            const calcCorrectOutput = calcCorrect.calcCorrectFormula(
+              statLevel,
+              calcCorrectGraphId
+            );
+            const bonusDmg =
+              cC.baseDmg * (cC.scaling / 100) * (calcCorrectOutput / 100);
+
+            totalBonusDmg += bonusDmg;
+          }
         }
+
+        output = output + baseDmg + totalBonusDmg;
+
+        const item = this.attackRatings.find((x) => x.dmgType == dmgType);
+        item.attackRating = output;
       }
       return output;
     },
 
-    calcAttackRating() {
+    calcTotalAttackRating() {
       let totalAR = 0;
-
-      for (let cC of this.getScalingStatsPerDmgType) {
-        const statLevel = this.findStatLevelBy(cC.scalesWith);
-        const calcCorrectGraphId = this.findCalcCorrectGraphIdBy(cC.dmgType);
-        const calcCorrectOutput = calcCorrect.calcCorrectFormula(
-          statLevel,
-          calcCorrectGraphId
-        );
-
-        const bonusDmg =
-          cC.baseDmg * (cC.scaling / 100) * (calcCorrectOutput / 100);
-
-        totalAR = totalAR + cC.baseDmg + bonusDmg;
+      for (let item of this.attackRatings) {
+        totalAR += item.attackRating;
       }
       return totalAR;
+    },
+
+    groupBy(objectArray, property) {
+      return objectArray.reduce((acc, obj) => {
+        const key = obj[property];
+        const curGroup = acc[key] ?? [];
+
+        return { ...acc, [key]: [...curGroup, obj] };
+      }, {});
     },
   },
 
@@ -186,21 +198,11 @@ export default {
           }
         }
       }
-      // Groupby dmgType
-      return data;
+      return this.groupBy(data, "dmgType");
     },
 
-    // Test
-    calcCorrectFormula() {
-      let output = 0;
-
-      if (Object.keys(this.calcCorrectGraph).length > 0) {
-        output = calcCorrect.calcCorrectFormula(
-          40,
-          this.calcCorrectGraph["CalcCorrectGraph ID (Magic)"]
-        );
-      }
-      return output;
+    weaponAttAndScaling() {
+      return this.provided.weaponAttackAndScaling;
     },
   },
 
@@ -211,6 +213,17 @@ export default {
       } else {
         this.calcCorrectGraph = {};
       }
+    },
+
+    provided: {
+      handler(selected) {
+        if (Object.keys(selected.finalWeapon).length == 0) {
+          for (let item of this.attackRatings) {
+            item.attackRating = 0;
+          }
+        }
+      },
+      deep: true,
     },
   },
 };
