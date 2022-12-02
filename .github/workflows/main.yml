@@ -1,41 +1,14 @@
-name: Deploy to Github Pages
-on:
-  push:
-    branches:
-      - main
-
+name: Build Vue
+on: [push]
 jobs:
-
-    build:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: Use Node.js
-          uses: actions/setup-node@v1
-          with:
-            node-version: '19.x'
-        - run: npm install
-        - run: npm run build --if-present
-
-    deploy:
-        name: Deploy
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Repo
-              uses: actions/checkout@v2
-            - name: Create Node Environment
-              uses: actions/setup-node@v1
-              with: 
-                node-version: 19.x
-            - name: Install Packages and Build Application
-              run: |
-                npm install -g @vue/cli yarn
-                yarn install
-                yarn build
-            - name: Deploy
-              uses: s0/git-publish-subdir-action@master
-              env:
-                REPO: self
-                BRANCH: main
-                FOLDER: dist
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build_vue:
+    runs-on: ubuntu-latest
+    name: Build Vue
+    steps:
+    - uses: actions/checkout@v2
+    - id: Build-Vue
+      uses: xRealNeon/VuePagesAction@1.0.0
+      with:
+        username: 'tsan21'
+        reponame: 'Waterfowl_Dance'
+        token: ${{ secrets.GITHUB_TOKEN }}
