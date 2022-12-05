@@ -36,9 +36,7 @@ jobs:
           node-version: "16"
           cache: "npm"
           cache-dependencey-path: subdir/package-lock.json
-        run: |
-          echo "manager=npm" >> $GITHUB_OUTPUT
-          echo "command=ci" >> $GITHUB_OUTPUT
+        run: "npm install"
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
