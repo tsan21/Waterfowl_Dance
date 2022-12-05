@@ -5,7 +5,6 @@ export default class ReinforceParamWeapon {
 
     // Model
     constructor(physAtk, magAtk, fireAtk, lightAtk, holyAtk, stamAtk, strScaling, dexScaling, intScaling, faiScaling, arcScaling) {
-
         this["Physical Attack"] = physAtk
         this["Magic Attack"] = magAtk
         this["Fire Attack"] = fireAtk

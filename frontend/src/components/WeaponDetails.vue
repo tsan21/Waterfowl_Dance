@@ -111,6 +111,8 @@
 <script>
 import ReinforceParamWeapon from "@/services/reinforceParamWeapon";
 import { EventBus } from "@/services/eventBus";
+import Infusions from "@/services/infusions";
+const infusions = new Infusions();
 
 export default {
   name: "WeaponDetails",
@@ -120,9 +122,9 @@ export default {
   components: {},
 
   mounted() {
+    this.infusions = Object.keys(infusions);
     this.weaponData = require("@/assets/TarnishedSpreadsheet/uniqueWeapons.json");
     this.scalingLetters = require("@/assets/TarnishedSpreadsheet/Scaling_Letters.json");
-    this.rawData = require("@/assets/TarnishedSpreadsheet/Raw_Data.json");
   },
 
   data: () => ({
@@ -133,21 +135,7 @@ export default {
     finalWeapon: {},
     selectedInfusion: "Standard",
     upgradeLevel: 0,
-    infusions: [
-      "Standard",
-      "Heavy",
-      "Keen",
-      "Quality",
-      "Fire",
-      "Flame Art",
-      "Lightning",
-      "Sacred",
-      "Magic",
-      "Cold",
-      "Poison",
-      "Bloody",
-      "Occult",
-    ],
+    infusions: [],
     tableData: [
       { reqStat: "Required (Str)", scaling: "Str Scaling", scalingStat: "Str" },
       { reqStat: "Required (Dex)", scaling: "Dex Scaling", scalingStat: "Dex" },
@@ -284,31 +272,16 @@ export default {
 
     finalWeapon(val) {
       this.emitFinalWeapon(val);
-      this.emitAttackRatings();
+      this.emitAttackRatings(); //
     },
 
-    selectedInfusion(newInfusion) {
-      // let weaponName = "";
-
-      // if (newInfusion == "Standard") {
-      //   weaponName = this.baseWeapon.Name;
-      // } else {
-      //   weaponName = newInfusion + " " + this.baseWeapon.Name;
-      // }
-
+    selectedInfusion(infusion) {
       if (Object.keys(this.baseWeapon).length > 0) {
-        // this.finalWeapon = this.rawData.find((w) => w.Name == weaponName);
-        if (newInfusion == "Standard") {
-          this.finalWeapon = this.rawData.find(
-            (w) => w.Name == this.baseWeapon.Name
-          );
-        } else {
-          this.finalWeapon = this.rawData.find(
-            (w) =>
-              w.Name.includes(this.baseWeapon.Name) 
-              // w.Name.includes(newInfusion)
-          );
-        }
+        const infusedWeapon = infusions.getWeaponByInfusion(
+          this.baseWeapon.ID,
+          infusion
+        );
+        this.finalWeapon = infusedWeapon;
       }
     },
 

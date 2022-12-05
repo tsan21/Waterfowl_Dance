@@ -38,7 +38,9 @@ export default {
 
   created() {
     EventBus.$on("RESET_ATTACK_RATINGS", () => {
-      this.resetAttackRatings();
+      for (let item of this.attackRatings) {
+        item.attackRating = 0;
+      }
     });
   },
 
@@ -119,12 +121,6 @@ export default {
 
         return { ...acc, [key]: [...curGroup, obj] };
       }, {});
-    },
-
-    resetAttackRatings() {
-      for (let item of this.attackRatings) {
-        item.attackRating = 0;
-      }
     },
   },
 
