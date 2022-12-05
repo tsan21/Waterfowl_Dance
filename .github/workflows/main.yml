@@ -16,25 +16,25 @@ jobs:
       - run: npm install
       - run: npm run build --if-present
 
-    deploy:
-      name: Deploy Application
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout Repo
-          uses: actions/checkout@master
-        - name: Create Node Environment
-          uses: actions/setup-node@v1
-          with: 
-            node-version: 19.x
-        - name: Install Packages and Build Application
-          run: |
-            npm install -g @vue/cli yarn
-            yarn install
-            yarn build
-        - name: Deploy
-          uses: s0/git-publish-subdir-action@main
-          env:
-            REPO: self
-            BRANCH: main
-            FOLDER: dist
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Create Node Environment
+        uses: actions/setup-node@v1
+        with: 
+          node-version: 19.x
+      - name: Install Packages and Build Application
+        run: |
+          npm install -g @vue/cli yarn
+          yarn install
+          yarn build
+      - name: Deploy
+        uses: s0/git-publish-subdir-action@main
+        env:
+          REPO: self
+          BRANCH: main
+          FOLDER: dist
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
