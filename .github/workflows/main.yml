@@ -28,7 +28,7 @@ jobs:
           node-version: 19.x
       - name: Install Packages and Build Application
         run: |
-          npm install -g @vue/cli yarn
+          npm install
           yarn install
           yarn build
       - name: Deploy
