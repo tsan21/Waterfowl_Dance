@@ -22,6 +22,7 @@
   
   
 <script>
+import { EventBus } from "@/services/eventBus";
 import CalcCorrectGraph from "@/services/calcCorrectGraph";
 import AttackElementCorrectParam from "@/services/attackElementCorrectParam";
 
@@ -35,7 +36,11 @@ export default {
 
   components: {},
 
-  mounted() {},
+  created() {
+    EventBus.$on("RESET_ATTACK_RATINGS", () => {
+      this.resetAttackRatings();
+    });
+  },
 
   data: () => ({
     calcCorrectGraph: {},
@@ -66,8 +71,8 @@ export default {
     },
 
     calcAttackRatingFor(dmgType) {
-      let output = 0;
       let baseDmg = 0;
+      let totalDmg = 0;
       let totalBonusDmg = 0;
       let list = this.getScalingStatsPerDmgType[dmgType];
 
@@ -91,12 +96,12 @@ export default {
           }
         }
 
-        output = output + baseDmg + totalBonusDmg;
+        totalDmg = totalDmg + baseDmg + totalBonusDmg;
 
         const item = this.attackRatings.find((x) => x.dmgType == dmgType);
-        item.attackRating = output;
+        item.attackRating = totalDmg;
       }
-      return output;
+      return Math.round(baseDmg) + " + " + Math.round(totalBonusDmg);
     },
 
     calcTotalAttackRating() {
@@ -104,7 +109,7 @@ export default {
       for (let item of this.attackRatings) {
         totalAR += item.attackRating;
       }
-      return totalAR;
+      return Math.floor(totalAR);
     },
 
     groupBy(objectArray, property) {
@@ -114,6 +119,12 @@ export default {
 
         return { ...acc, [key]: [...curGroup, obj] };
       }, {});
+    },
+
+    resetAttackRatings() {
+      for (let item of this.attackRatings) {
+        item.attackRating = 0;
+      }
     },
   },
 
@@ -216,16 +227,18 @@ export default {
       }
     },
 
-    provided: {
-      handler(selected) {
-        if (Object.keys(selected.finalWeapon).length == 0) {
-          for (let item of this.attackRatings) {
-            item.attackRating = 0;
-          }
-        }
-      },
-      deep: true,
-    },
+    // provided: {
+    //   handler(selected) {
+    //     if (Object.keys(selected.finalWeapon).length == 0) {
+    //       console.log(selected.finalWeapon);
+
+    //       for (let item of this.attackRatings) {
+    //         item.attackRating = 0;
+    //       }
+    //     }
+    //   },
+    //   deep: true,
+    // },
   },
 };
 </script>

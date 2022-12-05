@@ -220,6 +220,10 @@ export default {
     emitFinalWeapon(weapon) {
       EventBus.$emit("SET_FINAL_WEAPON", weapon);
     },
+
+    emitAttackRatings() {
+      EventBus.$emit("RESET_ATTACK_RATINGS");
+    },
   },
 
   computed: {
@@ -280,19 +284,31 @@ export default {
 
     finalWeapon(val) {
       this.emitFinalWeapon(val);
+      this.emitAttackRatings();
     },
 
     selectedInfusion(newInfusion) {
-      let weaponName = "";
+      // let weaponName = "";
 
-      if (newInfusion == "Standard") {
-        weaponName = this.baseWeapon.Name;
-      } else {
-        weaponName = newInfusion + " " + this.baseWeapon.Name;
-      }
+      // if (newInfusion == "Standard") {
+      //   weaponName = this.baseWeapon.Name;
+      // } else {
+      //   weaponName = newInfusion + " " + this.baseWeapon.Name;
+      // }
 
       if (Object.keys(this.baseWeapon).length > 0) {
-        this.finalWeapon = this.rawData.find((w) => w.Name == weaponName);
+        // this.finalWeapon = this.rawData.find((w) => w.Name == weaponName);
+        if (newInfusion == "Standard") {
+          this.finalWeapon = this.rawData.find(
+            (w) => w.Name == this.baseWeapon.Name
+          );
+        } else {
+          this.finalWeapon = this.rawData.find(
+            (w) =>
+              w.Name.includes(this.baseWeapon.Name) 
+              // w.Name.includes(newInfusion)
+          );
+        }
       }
     },
 
