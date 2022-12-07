@@ -61,3 +61,4 @@ jobs:
         username: 'tsan21'
         reponame: 'Waterfowl_Dance'
         token: ${{ secrets.GITHUB_TOKEN }}
+        path: './frontend'
