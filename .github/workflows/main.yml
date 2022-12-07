@@ -37,7 +37,7 @@ jobs:
 
     # Deploy to the github-pages environment
     environment:
-      name: gh-pages
+      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     # Specify runner + deployment step
@@ -46,3 +46,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+        working-directory: ./frontend 
+
