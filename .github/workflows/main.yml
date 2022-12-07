@@ -47,5 +47,5 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v1
         with:
-         cache-dependency-path: '**/package-lock.json'
+          path: ./frontend
 
