@@ -73,6 +73,8 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
