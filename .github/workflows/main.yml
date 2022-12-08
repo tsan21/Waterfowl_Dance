@@ -77,8 +77,9 @@ jobs:
             ${{ runner.os }}-node-
 
       - run: npm ci
-      - run: npm test
+        working-directory: ./frontend 
       - run: npm run generate
+        working-directory: ./frontend 
 
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
