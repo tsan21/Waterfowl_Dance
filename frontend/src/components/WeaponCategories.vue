@@ -27,20 +27,7 @@ export default {
 
   components: {},
 
-  mounted() {
-    // let a = require("@/assets/TarnishedSpreadsheet/Raw_Data.json");
-    // let cats = [];
-    // for (let b of a.filter(
-    //   (val1, index, arr) =>
-    //     arr.findIndex((val2) => val2["Weapon Type"] === val1["Weapon Type"]) ===
-    //     index
-    // )) {
-    //   cats.push(b["Weapon Type"]);
-    // }
-    // console.log(cats);
-
-    
-  },
+  mounted() {},
 
   data: () => ({
     selected: [],

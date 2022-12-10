@@ -11,6 +11,24 @@ export default class CalcCorrectGraph {
         "CalcCorrectGraph ID (Physical)"
     ]
 
+    // castToNumber() {
+    //     let returndata = []
+
+    //     for(let item of CalcCorrectGraph.CALC_CORRECT_GRAPH_ID){
+    //         let obj = {}
+    //         for(let [key,val] of Object.entries(item)){
+    //             if(key != "Name"){
+    //                 obj[key] = Number(val)
+    //             }
+    //             else{
+    //                 obj[key] = val
+    //             }
+    //         }    
+    //         returndata.push(obj)        
+    //     }
+
+    //     console.log(returndata)
+    // }
 
     // Gets the row in CalcCorrectGraph_ID.json for the selected weapon
     getCalcCorrectGraphId(weapon) {
@@ -49,7 +67,7 @@ export default class CalcCorrectGraph {
                 const nextKey = keys[(keys.indexOf(key) + 1) % keys.length]
                 const nextVal = calcCorrectGraphId[nextKey]
 
-                if (statLevel > currVal && statLevel < nextVal) {
+                if (Number(statLevel) >= currVal && Number(statLevel) < nextVal) {
                     statMin = currVal
                     statMax = nextVal
                     minNumber = key.split(" ")[1]
@@ -65,6 +83,8 @@ export default class CalcCorrectGraph {
         }
 
         const ratio = (statLevel - statMin) / (statMax - statMin)
+        console.log(statLevel, statMin, statMax)
+        console.log("ratio: " + ratio)
 
         if (exponentMin > 0) {
             growth = Math.pow(ratio, exponentMin)

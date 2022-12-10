@@ -37,10 +37,15 @@ export default {
   components: {},
 
   created() {
+    // Change to get from parent
     EventBus.$on("RESET_ATTACK_RATINGS", () => {
       for (let item of this.attackRatings) {
         item.attackRating = 0;
       }
+    });
+
+    EventBus.$on("IS_TWO_HANDED", (val) => {
+      this.twoHanded = val;
     });
   },
 
@@ -53,6 +58,7 @@ export default {
       { dmgType: "Lightning", attackRating: 0 },
       { dmgType: "Holy", attackRating: 0 },
     ],
+    twoHanded: null,
   }),
 
   methods: {
@@ -83,7 +89,12 @@ export default {
           baseDmg = cC.baseDmg;
           // Todo: handle cC.scaling==undefined elsewhere
           if (cC.scaling) {
-            const statLevel = this.findStatLevelBy(cC.scalesWith);
+            let statLevel = this.findStatLevelBy(cC.scalesWith);
+
+            if (this.twoHanded) {
+              statLevel = Math.floor((statLevel *= 1.5));
+            }
+
             const calcCorrectGraphId = this.findCalcCorrectGraphIdBy(
               cC.dmgType
             );
@@ -91,8 +102,10 @@ export default {
               statLevel,
               calcCorrectGraphId
             );
-            const bonusDmg =
+            let bonusDmg =
               cC.baseDmg * (cC.scaling / 100) * (calcCorrectOutput / 100);
+
+            // Math.floor(bonusDmg)
 
             totalBonusDmg += bonusDmg;
           }
@@ -103,7 +116,7 @@ export default {
         const item = this.attackRatings.find((x) => x.dmgType == dmgType);
         item.attackRating = totalDmg;
       }
-      return Math.round(baseDmg) + " + " + Math.round(totalBonusDmg);
+      return Math.floor(baseDmg) + " + " + Math.floor(totalBonusDmg);
     },
 
     calcTotalAttackRating() {
@@ -118,7 +131,6 @@ export default {
       return objectArray.reduce((acc, obj) => {
         const key = obj[property];
         const curGroup = acc[key] ?? [];
-
         return { ...acc, [key]: [...curGroup, obj] };
       }, {});
     },

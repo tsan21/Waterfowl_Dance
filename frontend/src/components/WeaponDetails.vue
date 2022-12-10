@@ -25,6 +25,7 @@
         :item-text="(item) => item.prefix + item.value"
         item-value="value"
         v-model="upgradeLevel"
+        auto-select-first
       >
         <template v-slot:no-data>
           <div class="px-4">Select a weapon</div>
@@ -41,6 +42,7 @@
         label="Infusion"
         v-model="selectedInfusion"
         :items="infusions"
+        auto-select-first
       >
       </v-autocomplete>
     </v-card-text>
@@ -209,6 +211,7 @@ export default {
       EventBus.$emit("SET_FINAL_WEAPON", weapon);
     },
 
+    // Change to emitParent
     emitAttackRatings() {
       EventBus.$emit("RESET_ATTACK_RATINGS");
     },

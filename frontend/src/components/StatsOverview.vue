@@ -44,6 +44,8 @@
 
 
 <script>
+import { EventBus } from "@/services/eventBus";
+
 export default {
   name: "StatsOverview",
 
@@ -59,11 +61,11 @@ export default {
     maxLevel: 99,
     attackElementCorrectId: "",
     stats: [
-      { name: "Strength", level: null },
-      { name: "Dexterity", level: null },
-      { name: "Intelligence", level: null },
-      { name: "Faith", level: null },
-      { name: "Arcane", level: null },
+      { name: "Strength", level: 0 },
+      { name: "Dexterity", level: 0 },
+      { name: "Intelligence", level: 0 },
+      { name: "Faith", level: 0 },
+      { name: "Arcane", level: 0 },
     ],
     twoHanded: false,
   }),
@@ -78,11 +80,19 @@ export default {
     setStats() {
       this.$emit("setStats", this.stats);
     },
+
+    emitTwoHanded() {
+      EventBus.$emit("IS_TWO_HANDED", this.twoHanded);
+    },
   },
 
   watch: {
     stats(val) {
       this.setStats(val);
+    },
+
+    twoHanded(val){
+      this.emitTwoHanded(val)
     },
   },
 };

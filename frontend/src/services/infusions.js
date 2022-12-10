@@ -25,5 +25,4 @@ export default class Infusions {
         const infusedWeapon = Infusions.RAW_DATA.find((x) => x.ID == infusedWeaponId)
         return infusedWeapon
     }
-
 }
