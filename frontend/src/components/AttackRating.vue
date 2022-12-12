@@ -89,10 +89,11 @@ export default {
           baseDmg = cC.baseDmg;
           // Todo: handle cC.scaling==undefined elsewhere
           if (cC.scaling) {
-            let statLevel = this.findStatLevelBy(cC.scalesWith);
+            // let statLevel = this.findStatLevelBy(cC.scalesWith);
+            let stat = this.provided.stats.find((s)=> s.name.includes(cC.scalesWith))
+            let statLevel = stat.level
 
-            if (this.twoHanded) {
-              // stat = this.provided.stats.find((s)=> s.name == "Strength")
+            if (this.twoHanded && stat.name == "Strength") {
               statLevel = Math.floor((statLevel *= 1.5));
             }
 
