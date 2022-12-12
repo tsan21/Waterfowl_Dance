@@ -151,9 +151,9 @@ export default {
     getStatColor(reqStat, myStatLvl) {
       const requiredStat = this.finalWeapon[reqStat];
 
-      if (Number(requiredStat) == 0) {
+      if (requiredStat == 0) {
         return "";
-      } else if (myStatLvl >= Number(requiredStat)) {
+      } else if (myStatLvl >= requiredStat) {
         return "sufficient-stat-req";
       } else {
         return "insufficient-stat-req";
@@ -186,7 +186,7 @@ export default {
     getUpgradeLevels() {
       let levels = [];
       const prefix = "+ ";
-      const maxUpgradeLevel = Number(this.baseWeapon["Max Upgrade"]) + 1;
+      const maxUpgradeLevel = this.baseWeapon["Max Upgrade"] + 1;
 
       // if (this.baseWeapon) {
       for (let i = 0; i < maxUpgradeLevel; i++) {

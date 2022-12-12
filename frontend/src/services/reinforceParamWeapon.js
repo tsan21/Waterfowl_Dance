@@ -3,7 +3,6 @@ export default class ReinforceParamWeapon {
     static REINFORCE_PARAM_WEAPON = require("@/assets/TarnishedSpreadsheet/Reinforce_Param_Weapon.json");
 
 
-    // Model
     constructor(physAtk, magAtk, fireAtk, lightAtk, holyAtk, stamAtk, strScaling, dexScaling, intScaling, faiScaling, arcScaling) {
         this["Physical Attack"] = physAtk
         this["Magic Attack"] = magAtk
@@ -20,9 +19,8 @@ export default class ReinforceParamWeapon {
     }
 
 
-    // Functions
     calcAttackAndScaling(reinforceId, upgradeLevel) {
-        const finalReinforceId = (Number(reinforceId) + Number(upgradeLevel))
+        const finalReinforceId = reinforceId + upgradeLevel
         const reinforceMultiplier = ReinforceParamWeapon.REINFORCE_PARAM_WEAPON
             .find((x) => x['ID'] == finalReinforceId)
 

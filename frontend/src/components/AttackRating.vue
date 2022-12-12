@@ -92,6 +92,7 @@ export default {
             let statLevel = this.findStatLevelBy(cC.scalesWith);
 
             if (this.twoHanded) {
+              // stat = this.provided.stats.find((s)=> s.name == "Strength")
               statLevel = Math.floor((statLevel *= 1.5));
             }
 
@@ -104,8 +105,6 @@ export default {
             );
             let bonusDmg =
               cC.baseDmg * (cC.scaling / 100) * (calcCorrectOutput / 100);
-
-            // Math.floor(bonusDmg)
 
             totalBonusDmg += bonusDmg;
           }
@@ -234,19 +233,6 @@ export default {
         this.calcCorrectGraph = {};
       }
     },
-
-    // provided: {
-    //   handler(selected) {
-    //     if (Object.keys(selected.finalWeapon).length == 0) {
-    //       console.log(selected.finalWeapon);
-
-    //       for (let item of this.attackRatings) {
-    //         item.attackRating = 0;
-    //       }
-    //     }
-    //   },
-    //   deep: true,
-    // },
   },
 };
 </script>

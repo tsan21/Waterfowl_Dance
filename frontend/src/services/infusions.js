@@ -21,7 +21,7 @@ export default class Infusions {
 
 
     getWeaponByInfusion(weaponId, infusion) {
-        const infusedWeaponId = Number(weaponId) + Number(this[infusion])
+        const infusedWeaponId = weaponId + this[infusion]
         const infusedWeapon = Infusions.RAW_DATA.find((x) => x.ID == infusedWeaponId)
         return infusedWeapon
     }
