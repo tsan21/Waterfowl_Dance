@@ -62,11 +62,6 @@ export default {
   }),
 
   methods: {
-    findStatLevelBy(abbrev) {
-      const stat = this.provided.stats.find((s) => s.name.includes(abbrev));
-      return stat.level;
-    },
-
     findCalcCorrectGraphIdBy(damageType) {
       let calcCorrectGraphId = {};
 
@@ -89,16 +84,17 @@ export default {
           baseDmg = cC.baseDmg;
           // Todo: handle cC.scaling==undefined elsewhere
           if (cC.scaling) {
-            // let statLevel = this.findStatLevelBy(cC.scalesWith);
-            let stat = this.provided.stats.find((s)=> s.name.includes(cC.scalesWith))
-            let statLevel = stat.level
+            let stat = this.provided.stats.find((s) =>
+              s.name.includes(cC.scalesWith)
+            );
+            let statLevel = stat.level;
 
             if (this.twoHanded && stat.name == "Strength") {
               statLevel = Math.floor((statLevel *= 1.5));
             }
 
             const calcCorrectGraphId = this.findCalcCorrectGraphIdBy(
-              cC.dmgType
+              dmgType
             );
             const calcCorrectOutput = calcCorrect.calcCorrectFormula(
               statLevel,
@@ -142,7 +138,7 @@ export default {
 
       if (Object.keys(this.provided.finalWeapon).length > 0) {
         calcCorrectGraphId = calcCorrect.getCalcCorrectGraphId(
-          this.provided.finalWeapon
+          this.provided.finalWeapon.ID
         );
       }
       return calcCorrectGraphId;

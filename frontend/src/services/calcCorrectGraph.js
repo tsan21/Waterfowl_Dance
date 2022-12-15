@@ -12,9 +12,9 @@ export default class CalcCorrectGraph {
     ]
 
     // Gets the row in CalcCorrectGraph_ID.json for the selected weapon
-    getCalcCorrectGraphId(weapon) {
+    getCalcCorrectGraphId(weaponId) {
         const calcCorrectGraphId = CalcCorrectGraph.CALC_CORRECT_GRAPH_ID
-            .find((x) => x.Name == weapon['Name'])
+            .find((x) => x.ID == weaponId)
         return calcCorrectGraphId
     }
 
@@ -64,8 +64,6 @@ export default class CalcCorrectGraph {
         }
 
         const ratio = (statLevel - statMin) / (statMax - statMin)
-        // console.log(statLevel, statMin, statMax)
-        // console.log("ratio: " + ratio)
 
         if (exponentMin > 0) {
             growth = Math.pow(ratio, exponentMin)
